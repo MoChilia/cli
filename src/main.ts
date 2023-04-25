@@ -3,7 +3,7 @@ import * as exec from '@actions/exec';
 import * as io from '@actions/io';
 import * as os from 'os';
 import * as path from 'path';
-const util = require('util');
+import util from 'util';
 const cpExec = util.promisify(require('child_process').exec);
 
 import { createScriptFile, TEMP_DIRECTORY, NullOutstreamStringWritable, deleteFile, getCurrentTime, checkIfEnvironmentVariableIsOmitted } from './utils';

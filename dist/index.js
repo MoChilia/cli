@@ -3845,6 +3845,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.main = void 0;
 const core = __importStar(__nccwpck_require__(519));
@@ -3852,8 +3855,8 @@ const exec = __importStar(__nccwpck_require__(372));
 const io = __importStar(__nccwpck_require__(853));
 const os = __importStar(__nccwpck_require__(37));
 const path = __importStar(__nccwpck_require__(17));
-const util = __nccwpck_require__(837);
-const cpExec = util.promisify((__nccwpck_require__(81).exec));
+const util_1 = __importDefault(__nccwpck_require__(837));
+const cpExec = util_1.default.promisify((__nccwpck_require__(81).exec));
 const utils_1 = __nccwpck_require__(196);
 const START_SCRIPT_EXECUTION_MARKER = `Starting script execution via docker image mcr.microsoft.com/azure-cli:`;
 const BASH_ARG = `bash --noprofile --norc -e `;
