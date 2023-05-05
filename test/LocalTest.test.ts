@@ -3,7 +3,7 @@ import { main } from "../src/main";
 // Unit Tests
 async function runTestLocally(azCliVersion: string, inlineScript: string, expectedOutcome: string){
     process.env.RUNNER_OS = 'Linux';
-    process.env.GITHUB_WORKSPACE = process.env.PWD;
+    process.env.GITHUB_WORKSPACE = process.cwd();
     process.env.INPUT_AZCLIVERSION = azCliVersion;
     process.env.INPUT_INLINESCRIPT = inlineScript;
     process.env.EXPECTED_OUTCOME = expectedOutcome;

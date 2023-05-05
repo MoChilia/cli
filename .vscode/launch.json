@@ -6,7 +6,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/test/LocalTest.test.js",
+            "program": "${workspaceFolder}/test/LocalTest.test.ts",
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
         }

@@ -6,7 +6,7 @@ import * as path from 'path';
 const util = require('util');
 const cpExec = util.promisify(require('child_process').exec);
 
-import { createScriptFile, TEMP_DIRECTORY, NullOutstreamStringWritable, deleteFile, getCurrentTime, checkIfEnvironmentVariableIsOmitted } from './utils';
+import { createScriptFile, TEMP_DIRECTORY, NullOutstreamStringWritable, deleteFile, getCurrentTime, checkIfEnvironmentVariableIsOmitted, createScriptFileForPwsh } from './utils';
 
 const START_SCRIPT_EXECUTION_MARKER: string = `Starting script execution via docker image mcr.microsoft.com/azure-cli:`;
 const BASH_ARG: string = `bash --noprofile --norc -e `;
@@ -47,9 +47,14 @@ export async function main(){
             core.error('Please enter a valid script.');
             throw new Error('Please enter a valid script.')
         }
-        inlineScript = ` set -e >&2; echo '${START_SCRIPT_EXECUTION_MARKER}' >&2; ${inlineScript}`;
-        scriptFileName = await createScriptFile(inlineScript);
-        let startCommand: string = ` ${BASH_ARG}${TEMP_DIRECTORY}/${scriptFileName} `;
+        //inlineScript = ` && ${inlineScript} `; // append && to the script to make sure that script fails if any of the command fails.
+        scriptFileName = await createScriptFileForPwsh(inlineScript);
+        let startCommand: string = `pwsh -command "${TEMP_DIRECTORY}\\${scriptFileName}"`;
+
+        // inlineScript = ` set -e >&2; echo '${START_SCRIPT_EXECUTION_MARKER}' >&2; ${inlineScript}`;
+        // scriptFileName = await createScriptFile(inlineScript);
+        // let startCommand: string = ` ${BASH_ARG}${TEMP_DIRECTORY}/${scriptFileName} `;
+
         let environmentVariables = '';
         for (let key in process.env) {
             // if (key.toUpperCase().startsWith("GITHUB_") && key.toUpperCase() !== 'GITHUB_WORKSPACE' && process.env[key]){
@@ -65,12 +70,14 @@ export async function main(){
         - voulme mount .azure session token file between host and container,
         - volume mount temp directory between host and container, inline script file is created in temp directory
         */
-        let command: string = `run --workdir ${process.env.GITHUB_WORKSPACE} -v ${process.env.GITHUB_WORKSPACE}:${process.env.GITHUB_WORKSPACE} `;
-        command += ` -v ${process.env.HOME}/.azure:/root/.azure -v ${TEMP_DIRECTORY}:${TEMP_DIRECTORY} `;
-        command += ` ${environmentVariables} `;
+        const HOMEPATH = process.env.HOME || process.env.USERPROFILE;
+        let command: string = `run --debug --workdir ${process.env.GITHUB_WORKSPACE} -v ${process.env.GITHUB_WORKSPACE}:${process.env.GITHUB_WORKSPACE} `;
+        command += ` -v ${HOMEPATH}\\.azure:\\root\\.azure -v ${TEMP_DIRECTORY}:${TEMP_DIRECTORY} `;
+        //command += ` ${environmentVariables} `;
         command += `--name ${CONTAINER_NAME} `;
-        command += ` mcr.microsoft.com/azure-cli:${azcliversion} ${startCommand}`;
+        command += ` mcr.microsoft.com\\azure-cli:${azcliversion} ${startCommand}`;
         console.log(`${START_SCRIPT_EXECUTION_MARKER}${azcliversion}`);
+        //console.log(command);
         await executeDockerCommand(command);
         console.log("az script ran successfully.");
     } catch (error) {
@@ -82,7 +89,6 @@ export async function main(){
         const scriptFilePath: string = path.join(TEMP_DIRECTORY, scriptFileName);
         await deleteFile(scriptFilePath);
         console.log("cleaning up container...");
-        console.log("just test whether it runs the code in enable_test_locally branch");
         await executeDockerCommand(` container rm --force ${CONTAINER_NAME} `, true);
     }
 };
@@ -117,7 +123,6 @@ const getAllAzCliVersions = async (): Promise<Array<string>> => {
 }
 
 const executeDockerCommand = async (dockerCommand: string, continueOnError: boolean = false): Promise<void> => {
-
     const dockerTool: string = await io.which("docker", true);
     var errorStream: string = '';
     var shouldOutputErrorStream: boolean = false;
@@ -143,6 +148,8 @@ const executeDockerCommand = async (dockerCommand: string, continueOnError: bool
     try {
         exitCode = await exec.exec(`"${dockerTool}" ${dockerCommand}`, [], execOptions);
     } catch (error) {
+        console.log(`"${dockerTool}" ${dockerCommand}`);
+
         if (!continueOnError) {
             throw error;
         }

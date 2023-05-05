@@ -15,6 +15,22 @@ export const createScriptFile = async (inlineScript: string): Promise<string> =>
     return fileName;
 }
 
+export const createScriptFileForPwsh = async (inlineScript: string): Promise<string> => {
+    const fileName: string = `AZ_CLI_GITHUB_ACTION_${getCurrentTime().toString()}.ps1`;
+    const filePath: string = path.join(TEMP_DIRECTORY, fileName);
+    fs.writeFileSync(filePath, `${inlineScript}`);
+    //check if the file is created
+    if (fs.existsSync(filePath)) {
+        console.log(`Script file created at ${filePath}`);
+        //output the file contents
+        console.log(fs.readFileSync(filePath, 'utf8'));
+    }
+    else {
+        core.error(`Failed to create script file at ${filePath}`);
+        throw new Error(`Failed to create script file at ${filePath}`);
+    }
+    return fileName;
+}
 
 export const deleteFile = async (filePath: string) => {
     if (fs.existsSync(filePath)) {
