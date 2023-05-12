@@ -117,8 +117,8 @@ const getAllAzCliVersions = async (): Promise<Array<string>> => {
 }
 
 const executeDockerCommand = async (dockerCommand: string, continueOnError: boolean = false): Promise<void> => {
-    //var dockerTool: string = await io.which("docker", true);
-    const dockerTool: string = await io.which("containerd", true);
+    const dockerTool: string = await io.which("docker", true);
+    ///const dockerTool: string = await io.which("containerd", true);
     if(!dockerTool){
         console.log(`Containerd is not found.`);
     }
