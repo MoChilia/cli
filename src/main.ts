@@ -54,7 +54,7 @@ export async function main(){
         for (let key in process.env) {
             // if (key.toUpperCase().startsWith("GITHUB_") && key.toUpperCase() !== 'GITHUB_WORKSPACE' && process.env[key]){
             if (!checkIfEnvironmentVariableIsOmitted(key) && process.env[key]) {
-                environmentVariables += ` -e "${key}=${process.env[key]}" `;
+                environmentVariables += ` -env "${key}=${process.env[key]}" `;
             }
         }
 
@@ -65,8 +65,8 @@ export async function main(){
         - voulme mount .azure session token file between host and container,
         - volume mount temp directory between host and container, inline script file is created in temp directory
         */
-        let command: string = `run --workdir ${process.env.GITHUB_WORKSPACE} -v ${process.env.GITHUB_WORKSPACE}:${process.env.GITHUB_WORKSPACE}`;
-        command += ` -v ${process.env.HOME}/.azure:/root/.azure -v ${TEMP_DIRECTORY}:${TEMP_DIRECTORY}`;
+        let command: string = `run --cwd ${process.env.GITHUB_WORKSPACE} --mount ${process.env.GITHUB_WORKSPACE}:${process.env.GITHUB_WORKSPACE}`;
+        command += ` --mount ${process.env.HOME}/.azure:/root/.azure --mount ${TEMP_DIRECTORY}:${TEMP_DIRECTORY}`;
         command += ` ${environmentVariables} `;
         command += `--name ${CONTAINER_NAME} `;
         command += ` mcr.microsoft.com/azure-cli:${azcliversion} ${startCommand}`;
@@ -117,8 +117,8 @@ const getAllAzCliVersions = async (): Promise<Array<string>> => {
 }
 
 const executeDockerCommand = async (dockerCommand: string, continueOnError: boolean = false): Promise<void> => {
-    const dockerTool: string = await io.which("docker", true);
-    ///const dockerTool: string = await io.which("containerd", true);
+    //const dockerTool: string = await io.which("docker", true);
+    const dockerTool: string = await io.which("containerd", true);
     if(!dockerTool){
         console.log(`Containerd is not found.`);
     }
