@@ -5,7 +5,7 @@ Open PowerShell, go to the directory where the repo is stored (.../cli/) and exe
 **1.npm install** \
 npm install downloads dependencies defined in a package. json file and generates a node_modules folder with the installed modules. \
 **2.npm install -g @vercel/ncc** \
-**3.ncc build src/main.ts -s -o _build**  \
+**3.ncc build -C -m src/entrypoint.ts**  \
 ncc is a simple CLI for compiling a Node.js module into a single file, together with all its dependencies, gcc-style. \
 
 This builds the solution and create the required .js file(s). Good to go!
