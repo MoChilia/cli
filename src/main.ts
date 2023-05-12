@@ -125,7 +125,7 @@ const executeDockerCommand = async (dockerCommand: string, continueOnError: bool
         console.log(`Dockertool: ${dockerTool}`);
     }
     var errorStream: string = '';
-    var shouldOutputErrorStream: boolean = false;
+    var shouldOutputErrorStream: boolean = true;
     var execOptions: any = {
         outStream: new NullOutstreamStringWritable({ decodeStrings: false }),
         listeners: {
