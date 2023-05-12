@@ -65,8 +65,8 @@ export async function main(){
         - voulme mount .azure session token file between host and container,
         - volume mount temp directory between host and container, inline script file is created in temp directory
         */
-        let command: string = `run --workdir ${process.env.GITHUB_WORKSPACE} -v ${process.env.GITHUB_WORKSPACE}:${process.env.GITHUB_WORKSPACE} `;
-        command += ` -v /runner/.azure:/root/.azure -v ${TEMP_DIRECTORY}:${TEMP_DIRECTORY} `;
+        let command: string = `run --workdir ${process.env.GITHUB_WORKSPACE}`;
+        command += ` -v /runner/.azure:/root/.azure -v`;
         command += ` ${environmentVariables} `;
         command += `--name ${CONTAINER_NAME} `;
         command += ` mcr.microsoft.com/azure-cli:${azcliversion} ${startCommand}`;
@@ -147,7 +147,7 @@ const executeDockerCommand = async (dockerCommand: string, continueOnError: bool
     };
     var exitCode;
     try {
-        exitCode = await exec.exec(`"${dockerTool}" ${dockerCommand}`, [], execOptions);
+        exitCode = await exec.exec(`sudo "${dockerTool}" ${dockerCommand}`, [], execOptions);
     } catch (error) {
         if (!continueOnError) {
             throw error;
