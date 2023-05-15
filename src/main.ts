@@ -66,10 +66,9 @@ export async function main(){
         - volume mount temp directory between host and container, inline script file is created in temp directory
         */
         let command: string = `run --workdir ${process.env.GITHUB_WORKSPACE}`;
-        // command += ` -v ${process.env.GITHUB_WORKSPACE}:${process.env.GITHUB_WORKSPACE} `;
-        command += ` --mount type=bind,source=${process.env.GITHUB_WORKSPACE},target=${process.env.GITHUB_WORKSPACE} `;
-        command += ` -v ${process.env.HOME}/.azure:/root/.azure `;
-        // command += ` --mount type=bind,source=${process.env.HOME},target=/root/.azure`;
+        command += ` -v ${process.env.GITHUB_WORKSPACE}:${process.env.GITHUB_WORKSPACE} `;
+        // command += ` -v ${process.env.HOME}/.azure:/root/.azure `;
+        command += ` --mount type=bind,source=${process.env.HOME}/.azure,target=/root/.azure`;
         command += ` -v ${TEMP_DIRECTORY}:${TEMP_DIRECTORY} `;
         // command += ` -v ${process.env.HOME}/test:/runner/_work/test `; // TODO: remove this line after testing
         command += ` ${environmentVariables} `;
@@ -148,7 +147,7 @@ const executeDockerCommand = async (dockerCommand: string, continueOnError: bool
     };
     var exitCode;
     try {
-        exitCode = await exec.exec(`"${dockerTool}" ${dockerCommand}`, [], execOptions);
+        exitCode = await exec.exec(`sudo "${dockerTool}" ${dockerCommand}`, [], execOptions);
     } catch (error) {
         if (!continueOnError) {
             throw error;
