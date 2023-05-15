@@ -68,7 +68,7 @@ export async function main(){
         let command: string = `run --workdir ${process.env.GITHUB_WORKSPACE} -v ${process.env.GITHUB_WORKSPACE}:${process.env.GITHUB_WORKSPACE} `;
         // command += ` --mount type=bind,source=${process.env.HOME}/.azure,target=/root/.azure `;
         command += ` --mount type=bind,source=${process.env.HOME},target=/root/.azure`;
-        command += `-v ${TEMP_DIRECTORY}:${TEMP_DIRECTORY} `;
+        command += ` -v ${TEMP_DIRECTORY}:${TEMP_DIRECTORY} `;
         // command += ` -v ${process.env.HOME}/test:/runner/_work/test `; // TODO: remove this line after testing
         command += ` ${environmentVariables} `;
         command += `--name ${CONTAINER_NAME} `;
