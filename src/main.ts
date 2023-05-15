@@ -119,7 +119,7 @@ const executeDockerCommand = async (dockerCommand: string, continueOnError: bool
 
     const dockerTool: string = await io.which("docker", true);
     var errorStream: string = '';
-    var shouldOutputErrorStream: boolean = false;
+    var shouldOutputErrorStream: boolean = true;
     var execOptions: any = {
         outStream: new NullOutstreamStringWritable({ decodeStrings: false }),
         listeners: {
