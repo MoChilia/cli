@@ -73,8 +73,10 @@ export async function main(){
         command += `--name ${CONTAINER_NAME} `;
         command += ` mcr.microsoft.com/azure-cli:${azcliversion} ${startCommand}`;
         console.log(`${START_SCRIPT_EXECUTION_MARKER}${azcliversion}`);
-        const testfile: string = `${process.env.HOME}/test/testfile.txt`; 
-        fs.writeFileSync(testfile, 'test');
+        // const testfile: string = `${process.env.HOME}/test/testfile.txt`; 
+        // fs.writeFileSync(testfile, 'test');
+        await exec.exec(`mkdir ${process.env.HOME}/test`);
+        await exec.exec(`touch ${process.env.HOME}/test/test.sh`);
         await exec.exec(`ls -la ${process.env.HOME}/test`);
         await executeDockerCommand(command);
         console.log("az script ran successfully.");
