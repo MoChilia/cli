@@ -3,7 +3,6 @@ import * as exec from '@actions/exec';
 import * as io from '@actions/io';
 import * as os from 'os';
 import * as path from 'path';
-import * as fs from 'fs';
 const util = require('util');
 const cpExec = util.promisify(require('child_process').exec);
 
@@ -67,17 +66,16 @@ export async function main(){
         - volume mount temp directory between host and container, inline script file is created in temp directory
         */
         let command: string = `run --workdir ${process.env.GITHUB_WORKSPACE} -v ${process.env.GITHUB_WORKSPACE}:${process.env.GITHUB_WORKSPACE} `;
-        command += ` -v ${process.env.HOME}/.azure:/root/.azure -v ${TEMP_DIRECTORY}:${TEMP_DIRECTORY} `;
-        command += ` -v ${process.env.HOME}/test:/runner/_work/test `; // TODO: remove this line after testing
+        command += ` --mount type=bind,source=${process.env.HOME}/.azure,target=/root/.azure `;
+        command += `-v ${TEMP_DIRECTORY}:${TEMP_DIRECTORY} `;
+        // command += ` -v ${process.env.HOME}/test:/runner/_work/test `; // TODO: remove this line after testing
         command += ` ${environmentVariables} `;
         command += `--name ${CONTAINER_NAME} `;
         command += ` mcr.microsoft.com/azure-cli:${azcliversion} ${startCommand}`;
         console.log(`${START_SCRIPT_EXECUTION_MARKER}${azcliversion}`);
-        // const testfile: string = `${process.env.HOME}/test/testfile.txt`; 
-        // fs.writeFileSync(testfile, 'test');
-        await exec.exec(`mkdir ${process.env.HOME}/test`);
-        await exec.exec(`touch ${process.env.HOME}/test/test.sh`);
-        await exec.exec(`ls -la ${process.env.HOME}/test`);
+        // await exec.exec(`mkdir ${process.env.HOME}/test`);
+        // await exec.exec(`touch ${process.env.HOME}/test/test.sh`);
+        // await exec.exec(`ls -la ${process.env.HOME}/test`);
         await executeDockerCommand(command);
         console.log("az script ran successfully.");
     } catch (error) {
