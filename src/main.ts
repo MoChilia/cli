@@ -71,7 +71,7 @@ export async function main(){
         command += `--name ${CONTAINER_NAME} `;
         command += ` mcr.microsoft.com/azure-cli:${azcliversion} ${startCommand}`;
         console.log(`${START_SCRIPT_EXECUTION_MARKER}${azcliversion}`);
-        await exec.exec(`chmod 777 /root`);
+        await exec.exec(`sudo chmod 777 /root`);
         await executeDockerCommand(command);
         console.log("az script ran successfully.");
     } catch (error) {
