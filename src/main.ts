@@ -125,6 +125,7 @@ const getAllAzCliVersions = async (): Promise<Array<string>> => {
 const executeDockerCommand = async (dockerCommand: string, continueOnError: boolean = false): Promise<void> => {
 
     const dockerTool: string = await io.which("docker", true);
+    console.log(`dockerTool:${dockerTool}`);
     var errorStream: string = '';
     var shouldOutputErrorStream: boolean = false;
     var execOptions: any = {
@@ -147,7 +148,7 @@ const executeDockerCommand = async (dockerCommand: string, continueOnError: bool
     };
     var exitCode;
     try {
-        exitCode = await exec.exec(`sudo "${dockerTool}" ${dockerCommand}`, [], execOptions);
+        exitCode = await exec.exec(`sudo docker ${dockerCommand}`, [], execOptions);
     } catch (error) {
         if (!continueOnError) {
             throw error;
