@@ -71,7 +71,7 @@ export async function main(){
         command += `--name ${CONTAINER_NAME} `;
         command += ` mcr.microsoft.com/azure-cli:${azcliversion} ${startCommand}`;
         console.log(`${START_SCRIPT_EXECUTION_MARKER}${azcliversion}`);
-        await executeDockerCommand(command);
+        await executeDockerCommand(command, true);
         console.log("az script ran successfully.");
     } catch (error) {
         core.error(error);
@@ -119,7 +119,7 @@ const executeDockerCommand = async (dockerCommand: string, continueOnError: bool
 
     const dockerTool: string = await io.which("docker", true);
     var errorStream: string = '';
-    var shouldOutputErrorStream: boolean = true;
+    var shouldOutputErrorStream: boolean = false;
     var execOptions: any = {
         outStream: new NullOutstreamStringWritable({ decodeStrings: false }),
         listeners: {
