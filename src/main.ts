@@ -83,7 +83,7 @@ export async function main(){
         await executeDockerCommand(command);
         await exec.exec(`docker cp ${process.env.HOME}/.azure ${CONTAINER_NAME}:/root/.azure`);
         await exec.exec(`docker start ${CONTAINER_NAME}`);
-        await exec.exec(`docker exec -it ${CONTAINER_NAME} ${startCommand}`);
+        await exec.exec(`docker exec ${CONTAINER_NAME} ${startCommand}`);
         console.log("az script ran successfully.");
     } catch (error) {
         core.error(error);
