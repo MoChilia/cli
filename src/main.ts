@@ -66,7 +66,7 @@ export async function main(){
         - voulme mount .azure session token file between host and container,
         - volume mount temp directory between host and container, inline script file is created in temp directory
         */
-        let command: string = `create --privileged=true --workdir ${process.env.GITHUB_WORKSPACE}`;
+        let command: string = `run --privileged=true --workdir ${process.env.GITHUB_WORKSPACE}`;
         command += ` -v ${process.env.GITHUB_WORKSPACE}:${process.env.GITHUB_WORKSPACE} `;
         // command += ` -v ${process.env.HOME}/.azure:/root/.azure `;
         // command += ` --mount type=bind,source=${process.env.HOME}/.azure,target=/root/.azure `;
@@ -82,8 +82,9 @@ export async function main(){
         // await exec.exec(`ls -la ${process.env.HOME}/test`);
         await executeDockerCommand(command);
         await exec.exec(`docker cp ${process.env.HOME}/.azure ${CONTAINER_NAME}:/root/.azure`);
-        await exec.exec(`docker start ${CONTAINER_NAME}`);
-        await exec.exec(`docker exec ${CONTAINER_NAME} ${startCommand}`);
+        await exec.exec(`docker ps -a`);
+        // await exec.exec(`docker start ${CONTAINER_NAME}`);
+        // await exec.exec(`docker exec ${CONTAINER_NAME} ${startCommand}`);
         console.log("az script ran successfully.");
     } catch (error) {
         core.error(error);
