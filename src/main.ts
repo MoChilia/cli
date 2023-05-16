@@ -82,8 +82,11 @@ export async function main(){
         // await exec.exec(`ls -la ${process.env.HOME}/test`);
         // await executeDockerCommand(command);
         await exec.exec(`docker ${command}`);
+        await exec.exec(`docker ps -a`);
+        await exec.exec(`docker logs ${CONTAINER_NAME}`);
         await exec.exec(`docker cp ${process.env.HOME}/.azure ${CONTAINER_NAME}:/root/.azure`);
         await exec.exec(`docker ps -a`);
+        await exec.exec(`docker logs ${CONTAINER_NAME}`);
         // await exec.exec(`docker start ${CONTAINER_NAME}`);
         // await exec.exec(`docker exec ${CONTAINER_NAME} ${startCommand}`);
         console.log("az script ran successfully.");
