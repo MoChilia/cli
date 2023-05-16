@@ -9,7 +9,8 @@ const cpExec = util.promisify(require('child_process').exec);
 import { createScriptFile, TEMP_DIRECTORY, NullOutstreamStringWritable, deleteFile, getCurrentTime, checkIfEnvironmentVariableIsOmitted } from './utils';
 
 const START_SCRIPT_EXECUTION_MARKER: string = `Starting script execution via docker image mcr.microsoft.com/azure-cli:`;
-const BASH_ARG: string = `bash --noprofile --norc -e `;
+// const BASH_ARG: string = `bash --noprofile --norc -e `;
+const BASH_ARG: string = `bash -e `;
 const AZ_CLI_VERSION_DEFAULT_VALUE = 'agentazcliversion'
 
 export async function main(){
@@ -81,8 +82,7 @@ export async function main(){
         // await exec.exec(`ls -la ${process.env.HOME}/test`);
         await executeDockerCommand(command);
         await exec.exec(`docker cp ${process.env.HOME}/.azure ${CONTAINER_NAME}:/root/.azure`);
-        await exec.exec(`ls -la /root/.azure`);
-        // await exec.exec(`docker start ${CONTAINER_NAME} ${startCommand}`);
+        await exec.exec(`docker exec ${CONTAINER_NAME} ${startCommand}`);
         console.log("az script ran successfully.");
     } catch (error) {
         core.error(error);
