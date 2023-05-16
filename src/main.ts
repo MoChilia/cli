@@ -71,8 +71,15 @@ export async function main(){
         command += `--name ${CONTAINER_NAME} `;
         command += ` mcr.microsoft.com/azure-cli:${azcliversion} ${startCommand}`;
         console.log(`${START_SCRIPT_EXECUTION_MARKER}${azcliversion}`);
-        console.log(`running command: ${command}`);
-        await executeDockerCommand(command);
+        // console.log(`running command: ${command}`);
+        let ctrcmd: string = `ctr run --cwd ${process.env.GITHUB_WORKSPACE} `;
+        ctrcmd += `--mount type=bind,src=${process.env.GITHUB_WORKSPACE},dst=${process.env.GITHUB_WORKSPACE} `;
+        ctrcmd += `--mount type=bind,src=${process.env.HOME}/.azure,dst=/root/.azure `;
+        ctrcmd += `--mount type=bind,src=${TEMP_DIRECTORY},dst=${TEMP_DIRECTORY} `;
+        ctrcmd += `--name ${CONTAINER_NAME} `;
+        ctrcmd += ` mcr.microsoft.com/azure-cli:${azcliversion} ${startCommand}`;
+        await exec.exec(`${ctrcmd}`);
+        // await executeDockerCommand(command);
         console.log("az script ran successfully.");
     } catch (error) {
         core.error(error);
@@ -147,7 +154,7 @@ const executeDockerCommand = async (dockerCommand: string, continueOnError: bool
     };
     var exitCode;
     try {
-        exitCode = await exec.exec(`sudo "${dockerTool}" ${dockerCommand}`, [], execOptions);
+        exitCode = await exec.exec(`"${dockerTool}" ${dockerCommand}`, [], execOptions);
     } catch (error) {
         if (!continueOnError) {
             throw error;
