@@ -68,17 +68,20 @@ export async function main(){
         let command: string = `run --privileged=true --workdir ${process.env.GITHUB_WORKSPACE}`;
         command += ` -v ${process.env.GITHUB_WORKSPACE}:${process.env.GITHUB_WORKSPACE} `;
         // command += ` -v ${process.env.HOME}/.azure:/root/.azure `;
-        command += ` --mount type=bind,source=${process.env.HOME}/.azure,target=/root/.azure `;
+        // command += ` --mount type=bind,source=${process.env.HOME}/.azure,target=/root/.azure `;
         command += ` -v ${TEMP_DIRECTORY}:${TEMP_DIRECTORY} `;
         // command += ` -v ${process.env.HOME}/test:/runner/_work/test `; // TODO: remove this line after testing
         command += ` ${environmentVariables} `;
         command += `--name ${CONTAINER_NAME} `;
-        command += ` mcr.microsoft.com/azure-cli:${azcliversion} ${startCommand}`;
+        command += ` mcr.microsoft.com/azure-cli:${azcliversion} `;
+        // command += startCommand;
         console.log(`${START_SCRIPT_EXECUTION_MARKER}${azcliversion}`);
         // await exec.exec(`mkdir ${process.env.HOME}/test`);
         // await exec.exec(`touch ${process.env.HOME}/test/test.sh`);
         // await exec.exec(`ls -la ${process.env.HOME}/test`);
         await executeDockerCommand(command);
+        await exec.exec(`docker cp ${process.env.HOME}/.azure ${CONTAINER_NAME}:/root/.azure`);
+        await exec.exec(`docker start ${CONTAINER_NAME} ${startCommand}`);
         console.log("az script ran successfully.");
     } catch (error) {
         core.error(error);
@@ -148,7 +151,7 @@ const executeDockerCommand = async (dockerCommand: string, continueOnError: bool
     };
     var exitCode;
     try {
-        exitCode = await exec.exec(`docker ${dockerCommand}`, [], execOptions);
+        exitCode = await exec.exec(`"${dockerTool}" ${dockerCommand}`, [], execOptions);
     } catch (error) {
         if (!continueOnError) {
             throw error;
