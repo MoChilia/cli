@@ -9,8 +9,8 @@ const cpExec = util.promisify(require('child_process').exec);
 import { createScriptFile, TEMP_DIRECTORY, NullOutstreamStringWritable, deleteFile, getCurrentTime, checkIfEnvironmentVariableIsOmitted } from './utils';
 
 const START_SCRIPT_EXECUTION_MARKER: string = `Starting script execution via docker image mcr.microsoft.com/azure-cli:`;
-// const BASH_ARG: string = `bash --noprofile --norc -e `;
-const BASH_ARG: string = `bash -e `;
+const BASH_ARG: string = `bash --noprofile --norc -e `;
+// const BASH_ARG: string = `bash -e `;
 const AZ_CLI_VERSION_DEFAULT_VALUE = 'agentazcliversion'
 
 export async function main(){
@@ -66,25 +66,25 @@ export async function main(){
         - voulme mount .azure session token file between host and container,
         - volume mount temp directory between host and container, inline script file is created in temp directory
         */
-        let command: string = `run -it --privileged=true --workdir ${process.env.GITHUB_WORKSPACE}`;
+        let command: string = `run --workdir ${process.env.GITHUB_WORKSPACE}`;
         command += ` -v ${process.env.GITHUB_WORKSPACE}:${process.env.GITHUB_WORKSPACE} `;
-        // command += ` -v ${process.env.HOME}/.azure:/root/.azure `;
+        command += ` -v ${process.env.HOME}/.azure:/root/.azure `;
         // command += ` --mount type=bind,source=${process.env.HOME}/.azure,target=/root/.azure `;
         command += ` -v ${TEMP_DIRECTORY}:${TEMP_DIRECTORY} `;
         // command += ` -v ${process.env.HOME}/test:/runner/_work/test `; // TODO: remove this line after testing
         command += ` ${environmentVariables} `;
         command += `--name ${CONTAINER_NAME} `;
         command += ` mcr.microsoft.com/azure-cli:${azcliversion} `;
-        // command += startCommand;
+        command += startCommand;
         console.log(`${START_SCRIPT_EXECUTION_MARKER}${azcliversion}`);
         // await exec.exec(`mkdir ${process.env.HOME}/test`);
         // await exec.exec(`touch ${process.env.HOME}/test/test.sh`);
         // await exec.exec(`ls -la ${process.env.HOME}/test`);
         // await executeDockerCommand(command);
-        await exec.exec(`docker ${command}`);
-        await exec.exec(`docker ps -a`);
-        await exec.exec(`docker logs ${CONTAINER_NAME}`);
-        await exec.exec(`docker cp ${process.env.HOME}/.azure ${CONTAINER_NAME}:/root/.azure`);
+        await exec.exec(`docker ${command} `);
+        // await exec.exec(`docker ps -a`);
+        // await exec.exec(`docker logs ${CONTAINER_NAME}`);
+        // await exec.exec(`docker cp ${process.env.HOME}/.azure ${CONTAINER_NAME}:/root/.azure`);
         await exec.exec(`docker ps -a`);
         await exec.exec(`docker logs ${CONTAINER_NAME}`);
         // await exec.exec(`docker start ${CONTAINER_NAME}`);
