@@ -80,7 +80,8 @@ export async function main(){
         // await exec.exec(`mkdir ${process.env.HOME}/test`);
         // await exec.exec(`touch ${process.env.HOME}/test/test.sh`);
         // await exec.exec(`ls -la ${process.env.HOME}/test`);
-        await executeDockerCommand(command);
+        // await executeDockerCommand(command);
+        await exec.exec(`docker ${command}`);
         await exec.exec(`docker cp ${process.env.HOME}/.azure ${CONTAINER_NAME}:/root/.azure`);
         await exec.exec(`docker ps -a`);
         // await exec.exec(`docker start ${CONTAINER_NAME}`);
