@@ -65,7 +65,7 @@ export async function main(){
         - voulme mount .azure session token file between host and container,
         - volume mount temp directory between host and container, inline script file is created in temp directory
         */
-        let command: string = `run --workdir ${process.env.GITHUB_WORKSPACE}`;
+        let command: string = `run --privileged=true --workdir ${process.env.GITHUB_WORKSPACE}`;
         command += ` -v ${process.env.GITHUB_WORKSPACE}:${process.env.GITHUB_WORKSPACE} `;
         // command += ` -v ${process.env.HOME}/.azure:/root/.azure `;
         command += ` --mount type=blind,source=${process.env.HOME}/.azure,target=/root/.azure`;
