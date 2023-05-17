@@ -76,8 +76,9 @@ export async function main(){
         ctrcmd += `--mount type=bind,src=${process.env.GITHUB_WORKSPACE},dst=${process.env.GITHUB_WORKSPACE} `;
         ctrcmd += `--mount type=bind,src=${process.env.HOME}/.azure,dst=/root/.azure `;
         ctrcmd += `--mount type=bind,src=${TEMP_DIRECTORY},dst=${TEMP_DIRECTORY} `;
-        ctrcmd += `--name ${CONTAINER_NAME} `;
-        ctrcmd += ` mcr.microsoft.com/azure-cli:${azcliversion} ${startCommand}`;
+        ctrcmd += ` mcr.microsoft.com/azure-cli:${azcliversion} `;
+        ctrcmd += ` ${CONTAINER_NAME} `;
+        ctrcmd += ` ${startCommand} `;
         await exec.exec(`${ctrcmd}`);
         // await executeDockerCommand(command);
         console.log("az script ran successfully.");
