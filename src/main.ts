@@ -72,7 +72,7 @@ export async function main(){
         command += ` mcr.microsoft.com/azure-cli:${azcliversion} ${startCommand}`;
         console.log(`${START_SCRIPT_EXECUTION_MARKER}${azcliversion}`);
         // console.log(`running command: ${command}`);
-        let ctrcmd: string = `ctr run --cwd ${process.env.GITHUB_WORKSPACE} `;
+        let ctrcmd: string = `sudo ctr run --cwd ${process.env.GITHUB_WORKSPACE} `;
         ctrcmd += `--mount type=bind,src=${process.env.GITHUB_WORKSPACE},dst=${process.env.GITHUB_WORKSPACE} `;
         ctrcmd += `--mount type=bind,src=${process.env.HOME}/.azure,dst=/root/.azure `;
         ctrcmd += `--mount type=bind,src=${TEMP_DIRECTORY},dst=${TEMP_DIRECTORY} `;
