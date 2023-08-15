@@ -8,12 +8,38 @@ on:
   workflow_dispatch:
  
 jobs:
-  basic_test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Check out source code
         uses: actions/checkout@v3.5.2
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+
+      - name: Install dependencies
+        run: |
+          sudo npm i -g @vercel/ncc
+          npm install 
+
+      - name: Compile files
+        run: |
+          ncc build -C -m src/entrypoint.ts
+
+      - name: Commit Files
+        continue-on-error: true # commit will fail if the code wasn't changed. Prevent the build to fail in this case.
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add dist/index.js -f
+          git commit -m "Update dist/index.js"
+          git push
+
+  basic_test:
+    runs-on: ubuntu-latest
+    steps:
       - name: Test - Postive
         uses: ./
         with:
