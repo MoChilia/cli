@@ -12,6 +12,7 @@ const START_SCRIPT_EXECUTION_MARKER: string = "Starting script execution via doc
 const AZ_CLI_VERSION_DEFAULT_VALUE = 'agentazcliversion'
 
 export async function main() {
+    console.log("test");
     var scriptFileName: string = '';
     const CONTAINER_NAME = `MICROSOFT_AZURE_CLI_${getCurrentTime()}_CONTAINER`;
     try {
