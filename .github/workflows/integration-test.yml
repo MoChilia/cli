@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
  
 jobs:
-  build:
+  basic-test:
     runs-on: ubuntu-latest
     steps:
       - name: Check out source code
@@ -37,9 +37,6 @@ jobs:
           git commit -m "Update dist/index.js"
           git push
 
-  basic_test:
-    runs-on: ubuntu-latest
-    steps:
       - name: Test - Postive
         uses: ./
         with:
