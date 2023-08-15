@@ -35,7 +35,7 @@ jobs:
           git config --local user.name "GitHub Action"
           git add dist/index.js -f
           git commit -m "Update dist/index.js"
-          git push
+          git push origin ${GITHUB_REF}
 
       - name: Test - Postive
         uses: ./
