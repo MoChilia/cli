@@ -71,6 +71,7 @@ export async function main() {
             "bash", "--noprofile", "--norc", "-e", `${TEMP_DIRECTORY}/${scriptFileName}`);
 
         console.log(`${START_SCRIPT_EXECUTION_MARKER}${azcliversion}`);
+        console.log(args.join(" "));
         await executeDockerCommand(args);
         console.log("az script ran successfully.");
     }
