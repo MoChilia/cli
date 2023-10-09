@@ -72,6 +72,14 @@ export async function main() {
 
         console.log(`${START_SCRIPT_EXECUTION_MARKER}${azcliversion}`);
         console.log(args.join(" "));
+        let testargs: string[] = ["run", "--workdir", `${process.env.GITHUB_WORKSPACE}`,
+        "-v", `${process.env.GITHUB_WORKSPACE}:${process.env.GITHUB_WORKSPACE}`,
+        "-v", `${process.env.HOME}/.azure:/root/.azure`,
+        "-v", `${TEMP_DIRECTORY}:${TEMP_DIRECTORY}`,
+        "--name", CONTAINER_NAME,
+        `mcr.microsoft.com/azure-cli:${azcliversion}`,
+        "bash", "--noprofile", "--norc", "-e", `ls -la ~ && ls -la ~/.azure/`];
+        await executeDockerCommand(testargs);
         await executeDockerCommand(args);
         console.log("az script ran successfully.");
     }
