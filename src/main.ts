@@ -124,7 +124,7 @@ const executeDockerCommand = async (args: string[], continueOnError: boolean = f
     var execOptions: any = {
         outStream: new NullOutstreamStringWritable({ decodeStrings: false }),
         listeners: {
-            stdout: (data: any) => console.log(data.toString()), //to log the script output while the script is running.
+            // stdout: (data: any) => console.log(data.toString()), //to log the script output while the script is running.
             errline: (data: string) => {
                 if (!shouldOutputErrorStream) {
                     errorStream += data + os.EOL;
