@@ -63,12 +63,12 @@ export async function main() {
         ];
         for (let key in process.env) {
             if (!checkIfEnvironmentVariableIsOmitted(key) && process.env[key]) {
-                args.push("-e", `${key}=${process.env[key]}`);
+                args.push("--env", `${key}=${process.env[key]}`);
             }
         }
         args.push("--name", CONTAINER_NAME,
             `mcr.microsoft.com/azure-cli:${azcliversion}`,
-            "bash", "--noprofile", "--norc", "-e", `${TEMP_DIRECTORY}/${scriptFileName}`);
+            "bash", "--noprofile", "--norc", "--env", `${TEMP_DIRECTORY}/${scriptFileName}`);
 
         console.log(`${START_SCRIPT_EXECUTION_MARKER}${azcliversion}`);
         console.log(args.join(" "));
@@ -78,7 +78,7 @@ export async function main() {
         "-v", `${TEMP_DIRECTORY}:${TEMP_DIRECTORY}`,
         "--name", CONTAINER_NAME,
         `mcr.microsoft.com/azure-cli:${azcliversion}`,
-        "bash", "--noprofile", "--norc", "-e", `ls -la ~ && ls -la ~/.azure/`];
+        "bash", "--noprofile", "--norc", "--env", `echo $HOME; ls -la ~`];
         await executeDockerCommand(testargs);
         await executeDockerCommand(args);
         console.log("az script ran successfully.");
