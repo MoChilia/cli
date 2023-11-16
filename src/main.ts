@@ -78,7 +78,7 @@ export async function main(){
         // command += ` mcr.microsoft.com\\azure-cli:${azcliversion} ${startCommand}`;
         // console.log(`${START_SCRIPT_EXECUTION_MARKER}${azcliversion}`);
         //console.log(command);
-        let command: string = `run --workdir ${process.env.GITHUB_WORKSPACE} --name ${CONTAINER_NAME} mcr.microsoft.com/azure-cli:2.53.1 bash -c 'az --version'`
+        let command: string = `run --name ${CONTAINER_NAME} mcr.microsoft.com/azure-cli:2.53.1 bash -c 'az --version'`
         await executeDockerCommand(command);
         console.log("az script ran successfully.");
     } catch (error) {
@@ -140,7 +140,7 @@ const executeDockerCommand = async (dockerCommand: string, continueOnError: bool
                 }
                 if (data.trim() === START_SCRIPT_EXECUTION_MARKER) {
                     shouldOutputErrorStream = true;
-                    // errorStream = ''; // Flush the container logs. After this, script error logs will be tracked.
+                    errorStream = ''; // Flush the container logs. After this, script error logs will be tracked.
                 }
             }
         }
