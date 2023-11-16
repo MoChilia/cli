@@ -139,16 +139,16 @@ const executeDockerCommand = async (dockerCommand: string, continueOnError: bool
                 }
                 if (data.trim() === START_SCRIPT_EXECUTION_MARKER) {
                     shouldOutputErrorStream = true;
-                    errorStream = ''; // Flush the container logs. After this, script error logs will be tracked.
+                    // errorStream = ''; // Flush the container logs. After this, script error logs will be tracked.
                 }
             }
         }
     };
     var exitCode;
     try {
-        exitCode = await exec.exec(`"${dockerTool}" ${dockerCommand}`, [], execOptions);
+        exitCode = await exec.exec(`& "${dockerTool}" ${dockerCommand}`, [], execOptions);
     } catch (error) {
-        console.log(`"${dockerTool}" ${dockerCommand}`);
+        console.log(`& "${dockerTool}" ${dockerCommand}`);
 
         if (!continueOnError) {
             throw error;
