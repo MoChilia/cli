@@ -78,7 +78,8 @@ export async function main(){
         // command += ` mcr.microsoft.com\\azure-cli:${azcliversion} ${startCommand}`;
         // console.log(`${START_SCRIPT_EXECUTION_MARKER}${azcliversion}`);
         //console.log(command);
-        let command: string = `run --name ${CONTAINER_NAME} mcr.microsoft.com/azure-cli:2.53.1 bash -c 'az --version'`
+        // let command: string = `run --name ${CONTAINER_NAME} mcr.microsoft.com/azure-cli:2.53.1 bash -c 'az --version'`
+        let command: string = "run hello-world"
         await executeDockerCommand(command);
         console.log("az script ran successfully.");
     } catch (error) {
