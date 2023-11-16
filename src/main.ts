@@ -71,13 +71,14 @@ export async function main(){
         - volume mount temp directory between host and container, inline script file is created in temp directory
         */
         const HOMEPATH = process.env.HOME || process.env.USERPROFILE;
-        let command: string = `run --debug --workdir ${process.env.GITHUB_WORKSPACE} -v ${process.env.GITHUB_WORKSPACE}:${process.env.GITHUB_WORKSPACE} `;
-        command += ` -v ${HOMEPATH}\\.azure:\\root\\.azure -v ${TEMP_DIRECTORY}:${TEMP_DIRECTORY} `;
-        //command += ` ${environmentVariables} `;
-        command += `--name ${CONTAINER_NAME} `;
-        command += ` mcr.microsoft.com\\azure-cli:${azcliversion} ${startCommand}`;
-        console.log(`${START_SCRIPT_EXECUTION_MARKER}${azcliversion}`);
+        // let command: string = `run --workdir ${process.env.GITHUB_WORKSPACE} -v ${process.env.GITHUB_WORKSPACE}:${process.env.GITHUB_WORKSPACE} `;
+        // command += ` -v ${TEMP_DIRECTORY}:${TEMP_DIRECTORY} `;
+        // //command += ` ${environmentVariables} `;
+        // command += `--name ${CONTAINER_NAME} `;
+        // command += ` mcr.microsoft.com\\azure-cli:${azcliversion} ${startCommand}`;
+        // console.log(`${START_SCRIPT_EXECUTION_MARKER}${azcliversion}`);
         //console.log(command);
+        let command: string = `run --workdir ${process.env.GITHUB_WORKSPACE} --name ${CONTAINER_NAME} mcr.microsoft.com/azure-cli:2.53.1 bash -c 'az --version'`
         await executeDockerCommand(command);
         console.log("az script ran successfully.");
     } catch (error) {
@@ -89,7 +90,7 @@ export async function main(){
         const scriptFilePath: string = path.join(TEMP_DIRECTORY, scriptFileName);
         await deleteFile(scriptFilePath);
         console.log("cleaning up container...");
-        await executeDockerCommand(` container rm --force ${CONTAINER_NAME} `, true);
+        await executeDockerCommand(`container rm --force ${CONTAINER_NAME} `, true);
     }
 };
 
