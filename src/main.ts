@@ -16,10 +16,10 @@ export async function main(){
     var scriptFileName: string = '';
     const CONTAINER_NAME = `MICROSOFT_AZURE_CLI_${getCurrentTime()}_CONTAINER`;
     try {
-        if (process.env.RUNNER_OS != 'Linux') {
-            core.setFailed('Please use Linux based OS as a runner.');
-            return;
-        }
+        // if (process.env.RUNNER_OS != 'Linux') {
+        //     core.setFailed('Please use Linux based OS as a runner.');
+        //     return;
+        // }
 
         let inlineScript: string = core.getInput('inlineScript', { required: true });
         let azcliversion: string = core.getInput('azcliversion', { required: false }).trim().toLowerCase();
