@@ -16,8 +16,8 @@ export async function main() {
     const CONTAINER_NAME = `MICROSOFT_AZURE_CLI_${getCurrentTime()}_CONTAINER`;
     try {
         if (process.env.RUNNER_OS != 'Linux') {
-            core.setFailed('Please use Linux based OS as a runner.');
-            return;
+            core.error('Please use Linux based OS as a runner.');
+            throw new Error('Please use Linux based OS as a runner.');
         }
 
         let inlineScript: string = core.getInput('inlineScript', { required: true });
