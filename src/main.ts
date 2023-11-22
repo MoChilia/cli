@@ -17,6 +17,7 @@ export async function main() {
     let usrAgentRepo = crypto.createHash('sha256').update(`${process.env.GITHUB_REPOSITORY}`).digest('hex');
     let actionName = 'AzureCLIAction';
     let userAgentString = (!!prefix ? `${prefix}` : '') + `GITHUBACTIONS/${actionName}_${usrAgentRepo}`;
+    console.log(`User Agent String: ${userAgentString}`);
     core.exportVariable('AZURE_HTTP_USER_AGENT', userAgentString);
 
     var scriptFileName: string = '';
