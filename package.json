@@ -14,8 +14,8 @@
   "author": "Microsoft",
   "license": "MIT",
   "devDependencies": {
-    "@zeit/ncc": "^0.21.1",
-    "tslint": "^6.1.0",
+    "@vercel/ncc": "^0.38.1",
+    "eslint": "^8.55.0",
     "typescript": "^3.8.3"
   },
   "dependencies": {
