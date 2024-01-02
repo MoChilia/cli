@@ -56,7 +56,7 @@ export async function main() {
                 console.log(azcliversion);
                 console.log(exitCode);
             } catch (err) {
-                console.log(exitCode);
+                console.log(err.code);
                 console.log('Failed to fetch az cli version from agent. Reverting back to latest.')
                 azcliversion = 'latest'
             }
