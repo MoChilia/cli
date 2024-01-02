@@ -33,7 +33,7 @@ export async function main() {
 
         if (azcliversion == AZ_CLI_VERSION_DEFAULT_VALUE) {
             try {
-                const { stdout } = await cpExec('az version');
+                const { stdout } = await cpExec('az version --debug');
                 azcliversion = JSON.parse(stdout)["azure-cli"];
             } catch (err) {
                 console.log(err.code);
