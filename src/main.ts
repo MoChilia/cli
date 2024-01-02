@@ -35,7 +35,7 @@ export async function main() {
             try {
                 let stdout = '';
                 let stderr = '';
-                exitCode = await exec.exec('az', ['version', '--debug'], {
+                exitCode = await exec.exec('version', [], {
                     silent: true,
                     listeners: {
                         stdout: (data: Buffer) => {
