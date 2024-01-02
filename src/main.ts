@@ -31,12 +31,27 @@ export async function main() {
 
         if (azcliversion == AZ_CLI_VERSION_DEFAULT_VALUE) {
             try {
-                const { stdout, stderr } = await cpExec('az version --debug');
-                if (!stderr) {
-                    azcliversion = JSON.parse(stdout)["azure-cli"]
-                } else {
-                    throw stderr
+                let stdout = '';
+                let stderr = '';
+                const exitCode = await exec.exec('az', ['version', '--debug'], {
+                    silent: true,
+                    listeners: {
+                        stdout: (data: Buffer) => {
+                            stdout += data.toString();
+                        },
+                        stderr: (data: Buffer) => {
+                            stdout += data.toString();
+                        }
+                    }
+                });
+                if(exitCode == 0) {
+                    azcliversion = JSON.parse(stdout)["azure-cli"];
                 }
+                else{
+                    throw stderr;
+                }
+                console.log(azcliversion);
+                console.log(exitCode);
             } catch (err) {
                 console.log('Failed to fetch az cli version from agent. Reverting back to latest.')
                 azcliversion = 'latest'
