@@ -29,18 +29,20 @@ export async function main() {
         let inlineScript: string = core.getInput('inlineScript', { required: true });
         let azcliversion: string = core.getInput('azcliversion', { required: false }).trim().toLowerCase();
 
+        var exitCode = 100;
+
         if (azcliversion == AZ_CLI_VERSION_DEFAULT_VALUE) {
             try {
                 let stdout = '';
                 let stderr = '';
-                const exitCode = await exec.exec('az', ['version', '--debug'], {
+                exitCode = await exec.exec('az', ['version', '--debug'], {
                     silent: true,
                     listeners: {
                         stdout: (data: Buffer) => {
                             stdout += data.toString();
                         },
                         stderr: (data: Buffer) => {
-                            stdout += data.toString();
+                            stderr += data.toString();
                         }
                     }
                 });
@@ -53,6 +55,7 @@ export async function main() {
                 console.log(azcliversion);
                 console.log(exitCode);
             } catch (err) {
+                console.log(exitCode);
                 console.log('Failed to fetch az cli version from agent. Reverting back to latest.')
                 azcliversion = 'latest'
             }
