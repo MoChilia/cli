@@ -35,7 +35,7 @@ export async function main() {
             try {
                 let stdout = '';
                 let stderr = '';
-                exitCode = await exec.exec('version', [], {
+                exitCode = await exec.exec('az login', [], {
                     silent: true,
                     listeners: {
                         stdout: (data: Buffer) => {
@@ -50,6 +50,7 @@ export async function main() {
                     azcliversion = JSON.parse(stdout)["azure-cli"];
                 }
                 else{
+                    console.log(stderr);
                     throw stderr;
                 }
                 console.log(azcliversion);
