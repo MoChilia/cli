@@ -32,7 +32,7 @@ export async function main() {
         if (azcliversion == AZ_CLI_VERSION_DEFAULT_VALUE) {
             try {
                 let stdout = '';
-                const exitCode = await exec.exec('az version', [], {
+                const exitCode = await exec.exec('version', [], {
                     silent: true,
                     listeners: {
                         stdout: (data: any) => {
