@@ -35,7 +35,7 @@ export async function main() {
             try {
                 let stdout = '';
                 let stderr = '';
-                exitCode = await exec.exec('az account show', [], {
+                exitCode = await exec.exec('az version --debug', [], {
                     silent: true,
                     listeners: {
                         stdout: (data: Buffer) => {
@@ -46,11 +46,11 @@ export async function main() {
                         }
                     }
                 });
+                console.log(stderr);
                 if(exitCode == 0) {
                     azcliversion = JSON.parse(stdout)["azure-cli"];
                 }
                 else{
-                    console.log(stderr);
                     throw stderr;
                 }
                 console.log(azcliversion);
