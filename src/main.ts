@@ -33,13 +33,14 @@ export async function main() {
             try {
                 let stdout = '';
                 const exitCode = await exec.exec('az version', [], {
+                    silent: true,
                     listeners: {
-                        stdout: (data: Buffer) => {
+                        stdout: (data: any) => {
                             stdout += data.toString();
                         }
                     }
                 });
-                let azcliversion = JSON.parse(stdout)["azure-cli"];
+                azcliversion = JSON.parse(stdout)["azure-cli"];
                 console.log(azcliversion);
                 console.log(exitCode);
             } catch (err) {
