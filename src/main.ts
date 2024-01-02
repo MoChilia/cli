@@ -40,21 +40,10 @@ export async function main() {
                     listeners: {
                         stdout: (data: Buffer) => {
                             stdout += data.toString();
-                        },
-                        stderr: (data: Buffer) => {
-                            stderr += data.toString();
                         }
                     }
                 });
-                console.log(stderr);
-                if(exitCode == 0) {
-                    azcliversion = JSON.parse(stdout)["azure-cli"];
-                }
-                else{
-                    throw stderr;
-                }
-                console.log(azcliversion);
-                console.log(exitCode);
+                azcliversion = JSON.parse(stdout)["azure-cli"];
             } catch (err) {
                 console.log(err.code);
                 console.log('Failed to fetch az cli version from agent. Reverting back to latest.')
