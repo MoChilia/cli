@@ -35,7 +35,7 @@ export async function main() {
             try {
                 let stdout = '';
                 let stderr = '';
-                exitCode = await exec.exec('az login', [], {
+                exitCode = await exec.exec('az account show', [], {
                     silent: true,
                     listeners: {
                         stdout: (data: Buffer) => {
