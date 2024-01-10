@@ -6,7 +6,7 @@ import * as path from 'path';
 import * as crypto from 'crypto';
 const util = require('util');
 const cpExec = util.promisify(require('child_process').exec);
-
+ 
 import { createScriptFile, TEMP_DIRECTORY, NullOutstreamStringWritable, deleteFile, getCurrentTime, checkIfEnvironmentVariableIsOmitted } from './utils';
 
 const START_SCRIPT_EXECUTION_MARKER: string = "Starting script execution via docker image mcr.microsoft.com/azure-cli:";

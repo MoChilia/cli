@@ -1,7 +1,9 @@
 on:
   push:
     branches:
-      - master
+      - test-push
+
+permissions: read-all
 
 name: build-release
 
