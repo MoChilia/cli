@@ -4,7 +4,7 @@ on:
       - test-push
 
 permissions: 
-  repository-projects: write
+  contents: write
 
 name: build-release
 
