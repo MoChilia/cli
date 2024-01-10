@@ -3,7 +3,8 @@ on:
     branches:
       - test-push
 
-permissions: read-all
+permissions: 
+  repository-projects: write
 
 name: build-release
 
