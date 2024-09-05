@@ -64,6 +64,7 @@ export async function main() {
         scriptFileName = await createScriptFile(inlineScript);
         for (let key in process.env) {
             if (!checkIfEnvironmentVariableIsOmitted(key) && process.env[key]) {
+                console.log(`Setting env variable: ${key}=${process.env[key]}`);
                 args.push("-e", `${key}=${process.env[key]}`);
             }
         }
