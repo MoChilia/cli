@@ -58,7 +58,7 @@ export async function main() {
         - voulme mount .azure session token file between host and container,
         - volume mount temp directory between host and container, inline script file is created in temp directory
         */
-        let args: string[] = ["run", "--workdir", 
+        let args: string[] = ["run",
             "-v", `${TEMP_DIRECTORY}:${TEMP_DIRECTORY}`
         ];
         scriptFileName = await createScriptFile(inlineScript);
