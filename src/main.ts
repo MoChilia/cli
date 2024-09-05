@@ -60,7 +60,6 @@ export async function main() {
         */
         let args: string[] = ["run", "--workdir", `${process.env.GITHUB_WORKSPACE}`,
             "-v", `${process.env.GITHUB_WORKSPACE}:${process.env.GITHUB_WORKSPACE}`,
-            "-v", `${process.env.HOME}/.azure:/root/.azure`,
             "-v", `${TEMP_DIRECTORY}:${TEMP_DIRECTORY}`
         ];
         scriptFileName = await createScriptFile(inlineScript);
