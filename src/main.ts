@@ -59,7 +59,6 @@ export async function main() {
         - volume mount temp directory between host and container, inline script file is created in temp directory
         */
         let args: string[] = ["run", "--workdir", `${process.env.GITHUB_WORKSPACE}`,
-            "-v", `${process.env.GITHUB_WORKSPACE}:${process.env.GITHUB_WORKSPACE}`,
             "-v", `${TEMP_DIRECTORY}:${TEMP_DIRECTORY}`
         ];
         scriptFileName = await createScriptFile(inlineScript);
