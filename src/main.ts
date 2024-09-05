@@ -58,7 +58,7 @@ export async function main() {
         - voulme mount .azure session token file between host and container,
         - volume mount temp directory between host and container, inline script file is created in temp directory
         */
-        let args: string[] = ["run", "--workdir", `${process.env.GITHUB_WORKSPACE}`,
+        let args: string[] = ["run", "--workdir", 
             "-v", `${TEMP_DIRECTORY}:${TEMP_DIRECTORY}`
         ];
         scriptFileName = await createScriptFile(inlineScript);
