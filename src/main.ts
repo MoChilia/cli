@@ -62,12 +62,12 @@ export async function main() {
             "-v", `${TEMP_DIRECTORY}:${TEMP_DIRECTORY}`
         ];
         scriptFileName = await createScriptFile(inlineScript);
-        for (let key in process.env) {
-            if (!checkIfEnvironmentVariableIsOmitted(key) && process.env[key]) {
-                console.log(`Setting env variable: ${key}=${process.env[key]}`);
-                args.push("-e", `${key}=${process.env[key]}`);
-            }
-        }
+        // for (let key in process.env) {
+        //     if (!checkIfEnvironmentVariableIsOmitted(key) && process.env[key]) {
+        //         console.log(`Setting env variable: ${key}=${process.env[key]}`);
+        //         args.push("-e", `${key}=${process.env[key]}`);
+        //     }
+        // }
         args.push("--name", CONTAINER_NAME,
             `mcr.microsoft.com/azure-cli:${azcliversion}`,
             "bash", "--noprofile", "--norc", "-e", `${TEMP_DIRECTORY}/${scriptFileName}`);
