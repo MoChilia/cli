@@ -53,6 +53,7 @@ export async function main() {
         scriptFileName = await createScriptFile(inlineScript);
 
         const hostAzureConfigDir = process.env.AZURE_CONFIG_DIR || path.join(process.env.HOME, '.azure');
+        console.log(`Using Azure config directory: ${hostAzureConfigDir}`);
         const containerAzureConfigDir = '/root/.azure';
         
         /*
@@ -76,6 +77,7 @@ export async function main() {
             `mcr.microsoft.com/azure-cli:${azcliversion}`,
             "bash", "--noprofile", "--norc", "-e", `${TEMP_DIRECTORY}/${scriptFileName}`);
 
+        console.log(`Docker command: docker ${args.join(' ')}`);
         console.log(`${START_SCRIPT_EXECUTION_MARKER}${azcliversion}`);
         await executeDockerCommand(args);
         console.log("az script ran successfully.");
