@@ -83,15 +83,28 @@ export async function main() {
         await executeDockerCommand(createArgs);
         
         // Copy Azure config directory to container (if it exists)
+        console.log(`Checking for Azure config directory at: ${hostAzureConfigDir}`);
+        console.log(`HOME environment variable: ${process.env.HOME}`);
+        console.log(`AZURE_CONFIG_DIR environment variable: ${process.env.AZURE_CONFIG_DIR}`);
+        
         if (fs.existsSync(hostAzureConfigDir)) {
             try {
                 console.log(`Copying Azure config from ${hostAzureConfigDir} to container...`);
-                await executeDockerCommand(["cp", hostAzureConfigDir, `${CONTAINER_NAME}:${containerAzureConfigDir}`], true);
+                // Copy the .azure directory contents to /root/.azure in the container
+                await executeDockerCommand(["cp", hostAzureConfigDir, `${CONTAINER_NAME}:/root/`], true);
             } catch (error) {
                 console.log(`Failed to copy Azure config directory: ${error}`);
             }
         } else {
             console.log(`Azure config directory ${hostAzureConfigDir} does not exist, skipping copy.`);
+            // Try to list what's actually in the parent directory for debugging
+            try {
+                const parentDir = path.dirname(hostAzureConfigDir);
+                const files = fs.readdirSync(parentDir);
+                console.log(`Contents of ${parentDir}:`, files);
+            } catch (err) {
+                console.log(`Could not list contents of parent directory: ${err}`);
+            }
         }
         
         // Now start the container
