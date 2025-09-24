@@ -55,38 +55,44 @@ export async function main() {
         const hostAzureConfigDir = process.env.AZURE_CONFIG_DIR || path.join(process.env.HOME, '.azure');
         const containerAzureConfigDir = '/root/.azure';
         
-        // Get current user's UID and GID
-        const { stdout: uidOutput } = await cpExec('id -u');
-        const { stdout: gidOutput } = await cpExec('id -g');
-        const uid = uidOutput.trim();
-        const gid = gidOutput.trim();
-        console.log(`Using UID: ${uid} and GID: ${gid} for the container.`);
-        
         /*
         For the docker run command, we are doing the following
         - Set the working directory for docker continer
         - volume mount the GITHUB_WORKSPACE env variable (path where users checkout code is present) to work directory of container
-        - volume mount Azure config directory between host and container,
         - volume mount temp directory between host and container, inline script file is created in temp directory
-        - Set the user to match the host's UID and GID to ensure proper file ownership
+        - Copy Azure config directory (instead of mounting) so changes don't affect host
         */
-        let args: string[] = ["run", "--workdir", `${process.env.GITHUB_WORKSPACE}`,
-            "--user", `${uid}:${gid}`,
+        
+        // First create container without starting it
+        let createArgs: string[] = ["create", "--workdir", `${process.env.GITHUB_WORKSPACE}`,
             "-v", `${process.env.GITHUB_WORKSPACE}:${process.env.GITHUB_WORKSPACE}`,
-            "-v", `${hostAzureConfigDir}:${containerAzureConfigDir}`,
             "-v", `${TEMP_DIRECTORY}:${TEMP_DIRECTORY}`
         ];
         for (let key in process.env) {
             if (!checkIfEnvironmentVariableIsOmitted(key) && process.env[key]) {
-                args.push("-e", `${key}=${process.env[key]}`);
+                createArgs.push("-e", `${key}=${process.env[key]}`);
             }
         }
-        args.push("--name", CONTAINER_NAME,
+
+        createArgs.push("--name", CONTAINER_NAME,
             `mcr.microsoft.com/azure-cli:${azcliversion}`,
             "bash", "--noprofile", "--norc", "-e", `${TEMP_DIRECTORY}/${scriptFileName}`);
 
+        // Create the container
+        await executeDockerCommand(createArgs);
+        
+        // Copy Azure config directory to container (if it exists)
+        try {
+            await executeDockerCommand(["cp", hostAzureConfigDir, `${CONTAINER_NAME}:${containerAzureConfigDir}`], true);
+        } catch (error) {
+            console.log("Azure config directory not found or failed to copy, continuing without it...");
+        }
+        
+        // Now start the container
+        const startArgs: string[] = ["start", "-a", CONTAINER_NAME];
+
         console.log(`${START_SCRIPT_EXECUTION_MARKER}${azcliversion}`);
-        await executeDockerCommand(args);
+        await executeDockerCommand(startArgs);
         console.log("az script ran successfully.");
     }
     catch (error) {
