@@ -3,6 +3,7 @@ import * as exec from '@actions/exec';
 import * as io from '@actions/io';
 import * as os from 'os';
 import * as path from 'path';
+import * as fs from 'fs';
 import * as crypto from 'crypto';
 const util = require('util');
 const cpExec = util.promisify(require('child_process').exec);
@@ -82,10 +83,15 @@ export async function main() {
         await executeDockerCommand(createArgs);
         
         // Copy Azure config directory to container (if it exists)
-        try {
-            await executeDockerCommand(["cp", hostAzureConfigDir, `${CONTAINER_NAME}:${containerAzureConfigDir}`], true);
-        } catch (error) {
-            console.log("Azure config directory not found or failed to copy, continuing without it...");
+        if (fs.existsSync(hostAzureConfigDir)) {
+            try {
+                console.log(`Copying Azure config from ${hostAzureConfigDir} to container...`);
+                await executeDockerCommand(["cp", hostAzureConfigDir, `${CONTAINER_NAME}:${containerAzureConfigDir}`], true);
+            } catch (error) {
+                console.log(`Failed to copy Azure config directory: ${error}`);
+            }
+        } else {
+            console.log(`Azure config directory ${hostAzureConfigDir} does not exist, skipping copy.`);
         }
         
         // Now start the container
